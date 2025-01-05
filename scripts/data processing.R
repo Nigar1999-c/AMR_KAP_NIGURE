@@ -2,6 +2,8 @@ library(tidyverse)
 library(readxl)
 
 data <- read_excel("raw_data/AMR_KAP_Data.xlsx")
+
+
 sum(is.na(data))
 data <- na.omit(data)
 sum(is.na(data))
@@ -55,6 +57,9 @@ antibiotic_knowledge <- AMR |>
     knowledge_score >= 80 ~ "Good",
     TRUE ~ NA_character_
   ))
+
+
+
 
 # 2. knowledge of attitude 
 
@@ -111,18 +116,20 @@ practice_knowledge <- AMR |>
   ungroup() |> 
   # Grading a person's practice score
   mutate(practice_knowledge = case_when(
-    practice_score <= 79 ~ "inappropriate", 
-    practice_score >= 80 ~ "appropriate",
+    practice_score <= 79 ~ "Misuse", 
+    practice_score >= 80 ~ "GOOD",
     TRUE ~ NA_character_
   ))
 
 # combined the data 
+
+
 demographics <- data |> 
-  select(1:11)
+    select(1:11)
 
 
 information_source <- data |> 
-  select(40:49)
+     select(41:49)
 
 #combine all sections
 clean_data <- cbind(demographics,antibiotic_knowledge, attitude_knowledge, 
@@ -138,13 +145,14 @@ write.csv(clean_data, "clean_data/AMR_Clean.csv", row.names = FALSE)
 
 install.packages("openxlsx")
 
-# Load the required package
 library(openxlsx)
 
 # Ensure the directory exists
 if (!dir.exists("clean_data")) {
   dir.create("clean_data")
 }
+
+
 
 # Export the data as an Excel file
 write.xlsx(clean_data, "clean_data/AMR_Clean.xlsx", rowNames = FALSE)
